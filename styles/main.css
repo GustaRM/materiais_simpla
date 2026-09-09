@@ -1,0 +1,565 @@
+/* ========================================================================= */
+/* ESTILOS PRINCIPAIS — Simpla Invest Materiais de Apoio                  */
+/* ========================================================================= */
+
+:root {
+  --navy:       #0B1E3D;   /* azul-marinho, base da marca Simpla Invest */
+  --navy-2:     #122A52;   /* azul-marinho um tom mais claro, painéis sobre navy */
+  --navy-line:  rgba(255,255,255,0.14); /* divisórias sobre fundo navy */
+  --blue:       #3AA0FF;   /* azul de destaque da marca */
+  --blue-dark:  #1C7BC4;
+  --ink:        #101827;   /* texto principal sobre fundo claro */
+  --ink-soft:   #5B6472;   /* texto secundário sobre fundo claro */
+  --paper:      #F3F5F8;   /* fundo claro do conteúdo principal */
+  --paper-2:    #FFFFFF;   /* superfícies elevadas (cards) */
+  --line:       #E1E5EC;   /* linhas finas sobre fundo claro */
+  --white:      #FFFFFF;
+  --radius-s:   3px;
+  --radius-m:   6px;
+  --shadow:     0 6px 24px rgba(11,30,61,0.22);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .serif {
+  font-family: 'Fraunces', Georgia, serif;
+}
+
+a {
+  color: inherit;
+}
+
+/* ---------- layout raiz ---------- */
+.app {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+}
+
+/* ---------- barra lateral ---------- */
+.sidebar {
+  background: var(--navy);
+  color: var(--white);
+  border-right: 1px solid var(--navy-line);
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-mark {
+  width: 30px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.brand-text h1 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.2px;
+  color: var(--white);
+}
+
+.brand-text p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--navy-2);
+  border: 1px solid var(--navy-line);
+  border-radius: var(--radius-s);
+  padding: 8px 10px;
+}
+
+.search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--white);
+  width: 100%;
+}
+
+.search input::placeholder {
+  color: rgba(255,255,255,0.45);
+}
+
+.search svg {
+  flex-shrink: 0;
+  opacity: 0.55;
+  color: var(--white);
+}
+
+.nav-label {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.55);
+  margin: 0 0 2px;
+}
+
+.nav-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 0 2px;
+  font-family: inherit;
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.55);
+}
+
+.nav-toggle:hover {
+  color: rgba(255,255,255,0.8);
+}
+
+.nav-toggle .chevron {
+  flex-shrink: 0;
+  transition: transform 0.18s ease;
+}
+
+.nav-toggle[aria-expanded="false"] .chevron {
+  transform: rotate(-90deg);
+}
+
+.topics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--navy-line);
+  overflow: hidden;
+  max-height: 1000px;
+  transition: max-height 0.2s ease;
+}
+
+.topics.collapsed {
+  max-height: 0;
+  border-top-color: transparent;
+}
+
+.topics li {
+  border-bottom: 1px solid var(--navy-line);
+}
+
+.topic-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 11px 2px;
+  font-family: inherit;
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
+  text-align: left;
+}
+
+.topic-btn:hover {
+  color: var(--blue);
+}
+
+.topic-btn.active {
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.topic-count {
+  font-family: 'Fraunces', serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+}
+
+.topic-btn.active .topic-count {
+  color: var(--blue);
+}
+
+.sidebar-foot {
+  margin-top: auto;
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  padding-top: 14px;
+  border-top: 1px solid var(--navy-line);
+}
+
+/* ---------- conteúdo principal ---------- */
+main {
+  padding: 44px 56px 90px;
+  max-width: 980px;
+}
+
+.content-head p.eyebrow {
+  display: none; /* propositalmente sem eyebrow em caixa alta */
+}
+
+.content-head h2 {
+  font-size: 32px;
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+
+.content-head .desc {
+  font-size: 15px;
+  color: var(--ink-soft);
+  max-width: 62ch;
+  line-height: 1.55;
+  margin: 0 0 30px;
+}
+
+.doc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.video-card {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--navy);
+  border: 1px solid var(--navy);
+  border-radius: var(--radius-m);
+  padding: 16px 20px;
+  text-decoration: none;
+  color: var(--white);
+  transition: background 0.15s ease;
+}
+
+.video-card:hover {
+  background: var(--navy-2);
+}
+
+.video-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.video-text strong {
+  font-size: 14.5px;
+  font-weight: 500;
+}
+
+.video-text span {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.65);
+}
+
+.doc-card {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.doc-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--blue);
+}
+
+.doc-icon {
+  width: 30px;
+  height: 30px;
+  color: var(--ink-soft);
+}
+
+.doc-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: var(--radius-s);
+  background: var(--paper);
+  padding: 4px;
+}
+
+.doc-card h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.doc-meta {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.doc-actions {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.doc-actions a {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--blue-dark);
+  text-decoration: none;
+  border-bottom: 1px solid var(--blue);
+  padding-bottom: 1px;
+}
+
+.doc-actions a:hover {
+  color: var(--navy);
+  border-color: var(--navy);
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  color: var(--ink-soft);
+  font-size: 14px;
+  padding: 30px 0;
+}
+
+/* ---------- chat flutuante ---------- */
+#chat-launcher {
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  z-index: 40;
+  transition: transform 0.15s ease;
+}
+
+#chat-launcher:hover {
+  transform: translateY(-2px);
+}
+
+#chat-launcher svg {
+  width: 24px;
+  height: 24px;
+}
+
+#chat-panel {
+  position: fixed;
+  right: 26px;
+  bottom: 96px;
+  width: 360px;
+  max-width: calc(100vw - 40px);
+  height: 480px;
+  max-height: calc(100vh - 140px);
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 40;
+}
+
+#chat-panel.open {
+  display: flex;
+}
+
+.chat-head {
+  background: var(--navy);
+  color: var(--white);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-head h3 {
+  font-size: 15.5px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.chat-head span {
+  display: block;
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 1px;
+}
+
+.chat-close {
+  background: none;
+  border: none;
+  color: var(--white);
+  cursor: pointer;
+  opacity: 0.8;
+  padding: 4px;
+}
+
+.chat-close:hover {
+  opacity: 1;
+}
+
+.chat-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--paper);
+}
+
+.msg {
+  max-width: 84%;
+  font-size: 13.5px;
+  line-height: 1.5;
+  padding: 9px 12px;
+  border-radius: var(--radius-m);
+}
+
+.msg.bot {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+}
+
+.msg.user {
+  background: var(--blue);
+  color: var(--white);
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+
+.msg.typing {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.chat-input {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--line);
+  background: var(--paper-2);
+}
+
+.chat-input input {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  padding: 9px 11px;
+  font-family: inherit;
+  font-size: 13.5px;
+  outline: none;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.chat-input input:focus {
+  border-color: var(--blue);
+}
+
+.chat-input button {
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-s);
+  padding: 0 14px;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.chat-input button:hover {
+  background: var(--blue-dark);
+}
+
+/* ---------- responsivo ---------- */
+@media (max-width: 820px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: relative;
+    height: auto;
+  }
+
+  main {
+    padding: 32px 22px 90px;
+  }
+
+  #chat-panel {
+    width: calc(100vw - 32px);
+    right: 16px;
+  }
+
+  #chat-launcher {
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+/* respeita usuários com preferência por menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  #chat-launcher {
+    transition: none;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
