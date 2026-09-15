@@ -2,29 +2,14 @@
 // LÓGICA DO CATÁLOGO — Renderização de temas e materiais
 // =========================================================================
 
-const topicsList = document.getElementById("topics-list");
+const sidebarNav = document.getElementById("sidebar-nav");
 const docGrid = document.getElementById("doc-grid");
 const contentTitle = document.getElementById("content-title");
 const contentDesc = document.getElementById("content-desc");
 const searchInput = document.getElementById("search-input");
-const corretorasToggle = document.getElementById("corretoras-toggle");
 
-let activeTopicId = null; // null = "todos"
-
-// ========= Toggle de expansão da barra lateral =========
-corretorasToggle.addEventListener("click", () => {
-  const isOpen = corretorasToggle.getAttribute("aria-expanded") === "true";
-  corretorasToggle.setAttribute("aria-expanded", String(!isOpen));
-  topicsList.classList.toggle("collapsed", isOpen);
-});
-
-// ========= Ícone de documento (SVG) =========
-function docIconSVG() {
-  return `<svg class="doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-    <path d="M14 2v6h6"/>
-  </svg>`;
-}
+let activeTopicId = null;
+let activeMenuId = "corretoras";
 
 // ========= Logo da corretora =========
 function logoCorretora(logoUrl, nomeTema) {
@@ -33,29 +18,36 @@ function logoCorretora(logoUrl, nomeTema) {
 
 // ========= Renderização da lista de temas na barra lateral =========
 function renderTopics() {
-  const totalCount = TEMAS.reduce((sum, t) => sum + t.materiais.length, 0);
-  let html = `<li>
-    <button class="topic-btn ${activeTopicId === null ? "active" : ""}" data-topic="">
-      <span>Todos os materiais</span>
-      <span class="topic-count">${totalCount}</span>
-    </button>
-  </li>`;
-
-  TEMAS.forEach(t => {
-    html += `<li>
-      <button class="topic-btn ${activeTopicId === t.id ? "active" : ""}" data-topic="${t.id}">
-        <span>${t.nome}</span>
-        <span class="topic-count">${t.materiais.length}</span>
+  sidebarNav.innerHTML = MENUS.map((menu, index) => `
+    <div class="menu-group">
+      <button class="nav-toggle" data-menu="${menu.id}" aria-expanded="${activeMenuId === menu.id}">
+        <span>${menu.nome}</span>
+        <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
-    </li>`;
+      <ul class="topics ${activeMenuId === menu.id ? "" : "collapsed"}">
+        ${menu.temas.map(t => `<li>
+          <button class="topic-btn ${activeTopicId === t.id ? "active" : ""}" data-topic="${t.id}">
+            <span>${t.nome}</span>
+            ${menu.exibirQuantidade ? `<span class="topic-count">${t.materiais.length}</span>` : ""}
+          </button>
+        </li>`).join("")}
+      </ul>
+    </div>
+  `).join("");
+
+  sidebarNav.querySelectorAll(".nav-toggle").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const menuId = btn.dataset.menu;
+      activeMenuId = activeMenuId === menuId ? null : menuId;
+      renderTopics();
+    });
   });
 
-  topicsList.innerHTML = html;
-
   // Listeners para clique em temas
-  topicsList.querySelectorAll(".topic-btn").forEach(btn => {
+  sidebarNav.querySelectorAll(".topic-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       activeTopicId = btn.dataset.topic || null;
+      activeMenuId = MENUS.find(menu => menu.temas.some(t => t.id === activeTopicId)).id;
       searchInput.value = "";
       renderTopics();
       renderDocs();
@@ -79,25 +71,26 @@ function videoCardHTML(t) {
 // ========= Renderização do catálogo de documentos =========
 function renderDocs() {
   const query = searchInput.value.trim().toLowerCase();
+  const todosTemas = MENUS.flatMap(menu => menu.temas.map(t => ({ ...t, menuNome: menu.nome })));
   let temasToShow = activeTopicId
-    ? TEMAS.filter(t => t.id === activeTopicId)
-    : TEMAS;
+    ? todosTemas.filter(t => t.id === activeTopicId)
+    : todosTemas;
 
   // Atualiza cabeçalho do conteúdo
   if (query) {
     contentTitle.textContent = `Resultados para "${searchInput.value}"`;
-    contentDesc.textContent = "Materiais de todas as corretoras que combinam com sua busca.";
+    contentDesc.textContent = "Materiais que combinam com sua busca.";
   } else if (activeTopicId) {
-    const t = TEMAS.find(t => t.id === activeTopicId);
+    const t = todosTemas.find(t => t.id === activeTopicId);
     contentTitle.textContent = t.nome;
-    contentDesc.textContent = t.descricao;
+    contentDesc.textContent = t.descricao || t.menuNome;
   } else {
-    contentTitle.textContent = "Todas as corretoras";
-    contentDesc.textContent = "Vídeos e PDFs de apoio, organizados por corretora.";
+    contentTitle.textContent = "Materiais de apoio";
+    contentDesc.textContent = "Vídeos e PDFs organizados por tema e corretora.";
   }
 
   // Vídeo em destaque (apenas quando uma única corretora está selecionada)
-  const videoHTML = (!query && activeTopicId)
+  const videoHTML = (!query && activeTopicId && temasToShow[0].video)
     ? videoCardHTML(temasToShow[0])
     : "";
 
@@ -125,7 +118,7 @@ function renderDocs() {
 
   docGrid.innerHTML = videoHTML + materiaisVisiveis.map(m => `
     <article class="doc-card">
-      ${logoCorretora(m.logo, m.tema)}
+      ${m.logo ? logoCorretora(m.logo, m.tema) : ""}
       <h3>${m.titulo}</h3>
       <div class="doc-meta">${m.tema} · ${m.paginas} pág. · atualizado em ${m.atualizado}</div>
       <div class="doc-actions">
