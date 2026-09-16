@@ -95,6 +95,33 @@
   </form>
 </div>
 
+
+<!-- 1. Inicialização do Firebase Analytics via CDN -->
+<script type="module">
+  // Importa os módulos necessários do Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+  // Configuração oficial do seu projeto com o Measurement ID incluso!
+  const firebaseConfig = {
+    apiKey: "AIzaSyCJhjs4X4ovDukYppxI49KFZAarEz0SvKk",
+    authDomain: "materiais-de-apoio-simpla.firebaseapp.com",
+    projectId: "materiais-de-apoio-simpla",
+    storageBucket: "materiais-de-apoio-simpla.firebasestorage.app",
+    messagingSenderId: "670749373667",
+    appId: "1:670749373667:web:ef7c8a578814dfa53a01d6",
+    measurementId: "G-BK0PVFWWXE" // <--- O ID de medição já está aqui!
+  };
+
+  // Inicializa o Firebase e ativa o Analytics automaticamente
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+<!-- 2. O seu script de lógica do catálogo (carregado depois) -->
+<script src="app.js"></script>
+
+
 <!-- Scripts -->
 <script src="data/temas.js"></script>
 <script src="scripts/app.js"></script>
